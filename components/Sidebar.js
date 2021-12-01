@@ -8,6 +8,8 @@ import {
 } from "@heroicons/react/outline";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
+import { playlistIdState } from "../atoms/playlistAtom";
 import useSpotify from "../hooks/useSpotify";
 
 function Sidebar() {
@@ -15,17 +17,17 @@ function Sidebar() {
   const { data: session, status } = useSession();
 
   const [playlists, setPlaylists] = useState([]);
+  const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
 
   useEffect(() => {
     if (spotifyApi.getAccessToken()) {
-      spotifyApi.getUserPlaylists("1276251216").then((data) => {
-        console.log(data.body);
+      spotifyApi.getUserPlaylists().then((data) => {
         setPlaylists(data.body.items);
       });
     }
   }, [session, spotifyApi]);
   return (
-    <div className=' text-gray-500 p-5 text-sm border-r border-gray-900 overflow-y-scroll scrollbar-hide h-screen'>
+    <div className=' text-gray-500 p-5 text-xs border-r border-gray-900 overflow-y-scroll scrollbar-hide h-screen lg:text-sm sm:max-w-[12rem] lg:max-w-[10rem] hidden md:inline-flex'>
       <div className='space-y-4'>
         <button
           className='flex items-center space-x-2 hover:text-white'
@@ -56,12 +58,15 @@ function Sidebar() {
         </button>
         <button className='flex items-center space-x-2 hover:text-white'>
           <RssIcon className='h-5 w-5' />
-          <p>Search</p>
+          <p>Your Episodes</p>
         </button>
         <hr className='border-t-[0.1px] border-gray-900' />
 
         {playlists.map((playlist) => (
-          <p className='cursor-pointer hover:text-white' key={playlist.id}>
+          <p
+            onClick={() => setPlaylistId(playlist.id)}
+            className='cursor-pointer hover:text-white'
+            key={playlist.id}>
             {playlist.name}
           </p>
         ))}

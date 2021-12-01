@@ -14,7 +14,7 @@ async function refreshAccessToken(token) {
       ...token,
       accessToken: refreshedToken.access_token,
       accessTokenExpires: Date.now + refreshedToken.expires_in * 1000, // = 1 hour as 3600 in milliseconds
-      refreshToken: refreshedToken ?? token.refreshToken,
+      refreshToken: refreshedToken.refresh_token ?? token.refreshToken,
       //   replace if new one came back else fall backto old refresh token
     };
   } catch (error) {
@@ -62,10 +62,10 @@ export default NextAuth({
       return await refreshAccessToken(token);
     },
 
-    async sessionStorage({ session, token }) {
+    async session({ session, token }) {
       session.user.accessToken = token.accessToken;
-      session.user.refreshToken = token.refreshToken;
-      session.user.username = token.username;
+      session.refreshToken = token.refreshToken;
+      session.username = token.username;
       return session;
     },
   },
