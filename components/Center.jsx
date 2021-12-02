@@ -1,5 +1,5 @@
 import { ChevronDownIcon } from "@heroicons/react/outline";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { shuffle } from "lodash";
 import { playlistIdState, playlistState } from "../atoms/playlistAtom";
@@ -39,9 +39,11 @@ function Center() {
     }
   }, [spotifyApi, playlistId]);
   return (
-    <div className='flex-grow text-white'>
+    <div className='flex-grow text-white h-screen overflow-y-scroll scrollbar-hide'>
       <header className='absolute top-5 right-8'>
-        <div className='flex items-center bg-black space-x-3 opacity-90 hover:opacity-80 cursor-pointer rounded-full p-1 pr-2 '>
+        <div
+          className='flex items-center bg-black space-x-3 opacity-90 hover:opacity-80 cursor-pointer rounded-full p-1 pr-2 '
+          onClick={() => signOut()}>
           <img
             className='rounded-full w-10 h-10'
             src={session?.user.image}
@@ -54,18 +56,25 @@ function Center() {
 
       <section
         className={`flex items-end space-x-7 bg-gradient-to-b to-black ${color} h-80 text-white p-8`}>
-        <img
-          className='h-44 w-44 shadow-2xl'
-          src={playlist?.images?.[0]?.url}
-          alt=''
-        />
-
-        <div>
-          <p>PLAYLIST</p>
-          <h1 className='text-2xl md:text-3xl xl:text-5xl font-bold'>
-            {playlist?.name}
+        {playlist ? (
+          <div className='flex items-center space-x-5 relative'>
+            <img
+              className='h-44 w-44 shadow-2xl'
+              src={playlist?.images?.[0]?.url}
+              alt=''
+            />
+            <div>
+              <p className='mb-2'>PLAYLIST</p>
+              <h1 className='text-2xl md:text-3xl xl:text-5xl font-bold'>
+                {playlist?.name}
+              </h1>
+            </div>
+          </div>
+        ) : (
+          <h1 className='text-2xl md:text-3xl xl:text-5xl font-bold left-80 absolute top-40 font-mono'>
+            Spotify home page
           </h1>
-        </div>
+        )}
       </section>
 
       <div>
