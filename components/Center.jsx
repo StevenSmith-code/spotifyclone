@@ -13,6 +13,7 @@ import useSpotify from "../hooks/useSpotify";
 import Songs from "./Songs";
 import Song from "./Song";
 import ActivateDevice from "./ActivateDevice";
+import RecommendedSongs from "./RecommendedSongs";
 
 const colors = [
   "from-indigo-500",
@@ -25,11 +26,6 @@ const colors = [
 ];
 
 function Center() {
-  var today = new Date();
-  var date =
-    today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
-  var time =
-    today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
   const { data: session } = useSession();
   const [color, setColor] = useState(null);
   const playlistId = useRecoilValue(playlistIdState);
@@ -38,7 +34,6 @@ function Center() {
   const featuredListId = useRecoilValue(featuredlistIdState);
   const spotifyApi = useSpotify();
   const [isactive, setIsActive] = useState(false);
-
   useEffect(() => {
     setColor(shuffle(colors).pop());
   }, [playlistId]);
@@ -58,7 +53,7 @@ function Center() {
         }
       );
     }
-  }, [spotifyApi]);
+  }, [spotifyApi, playlistId]);
 
   useEffect(() => {
     if (spotifyApi.getAccessToken()) {
@@ -72,7 +67,8 @@ function Center() {
   }, [spotifyApi, playlistId]);
 
   return (
-    <div className='flex-grow text-white h-screen overflow-y-scroll scrollbar-hide bg-spotify-gray'>
+    <div
+      className={`flex-grow text-white h-screen overflow-y-scroll scrollbar-hide bg-spotify-gray `}>
       <header className='absolute top-5 right-8'>
         <div
           className='flex items-center bg-black space-x-3 opacity-90 hover:opacity-80 cursor-pointer rounded-full p-1 pr-2 hover:bg-red-900 transition duration-100 ease-in '
@@ -89,7 +85,7 @@ function Center() {
 
       <section
         className={`flex items-end space-x-7 bg-gradient-to-b bg-spotify-gray ${color} h-80 text-white p-8`}>
-        {isactive ? (
+        {isactive && playlist ? (
           <div className='flex items-center space-x-5 relative'>
             <img
               className='h-44 w-44 shadow-2xl'
@@ -113,11 +109,14 @@ function Center() {
       </section>
 
       <div>
-        <Songs />
+        {!playlist ? <RecommendedSongs /> : ""}
         {isactive ? (
-          ""
+          <Songs />
         ) : (
-          <h1>Please activate a device inorder to use this app!</h1>
+          <div>
+            <ActivateDevice />
+            <RecommendedSongs />
+          </div>
         )}
       </div>
     </div>
