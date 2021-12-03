@@ -6,16 +6,17 @@ import {
   RssIcon,
   HeartIcon,
 } from "@heroicons/react/outline";
+import { set } from "lodash";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { playlistIdState } from "../atoms/playlistAtom";
+import { playlistIdState, playlistState } from "../atoms/playlistAtom";
 import useSpotify from "../hooks/useSpotify";
 
 function Sidebar() {
   const spotifyApi = useSpotify();
   const { data: session, status } = useSession();
-
+  const [playlist, setPlaylist] = useRecoilState(playlistState);
   const [playlists, setPlaylists] = useState([]);
   const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
 
@@ -26,10 +27,17 @@ function Sidebar() {
       });
     }
   }, [session, spotifyApi]);
+
+  const handleHomePage = () => {
+    setPlaylist(null);
+  };
+
   return (
     <div className=' text-gray-500 p-5 text-xs border-r border-gray-900 overflow-y-scroll scrollbar-hide h-screen lg:text-sm sm:max-w-[12rem] lg:max-w-[10rem] hidden md:inline-flex pb-36'>
       <div className='space-y-4'>
-        <button className='flex items-center space-x-2 hover:text-white'>
+        <button
+          onClick={handleHomePage}
+          className='flex items-center space-x-2 hover:text-white'>
           <HomeIcon className='h-5 w-5' />
           <p>Home</p>
         </button>

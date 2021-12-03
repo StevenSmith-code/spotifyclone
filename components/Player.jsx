@@ -73,7 +73,7 @@ function Player() {
   );
 
   return (
-    <div className='text-white h-24 bg-gradient-to-b from-black to-gray-900 grid grid-cols-3 text-xs md:text-base px-2 md:px-8'>
+    <div className='text-white h-24 bg-spotify-player grid grid-cols-3 text-xs md:text-base px-2 md:px-8 border-t-[1px] border-gray-700'>
       {/* left side */}
       <div className='flex items-center space-x-4'>
         <img
@@ -104,7 +104,7 @@ function Player() {
       </div>
       <div className='flex items-center space-x-3 md:space-x-4 justify-end pr-5'>
         <VolumeOffIcon
-          onClick={() => volume > 0 && setVolume((volume = 0))}
+          onClick={() => volume > 0 && setVolume(1)}
           className='button'
         />
         <input
