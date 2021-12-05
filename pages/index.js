@@ -10,6 +10,12 @@ export default function Home() {
       <Head>
         <title>Spotify Clone</title>
         <link rel='icon' href='/favicon.ico' />
+        <link rel='preconnect' href='https://fonts.googleapis.com' />
+        <link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin />
+        <link
+          href='https://fonts.googleapis.com/css2?family=Sawarabi+Gothic&display=swap'
+          rel='stylesheet'
+        />
       </Head>
       <main className='flex'>
         <Sidebar />

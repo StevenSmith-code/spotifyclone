@@ -71,6 +71,7 @@ function Player() {
     }, 400),
     []
   );
+  console.log(songInfo);
 
   return (
     <div className='text-white h-24 bg-spotify-player grid grid-cols-3 text-xs md:text-base px-2 md:px-8 border-t-[1px] border-gray-700'>
@@ -78,7 +79,7 @@ function Player() {
       <div className='flex items-center space-x-4'>
         <img
           className='hidden md:inline h-10 w-10'
-          src={songInfo?.album.images?.[0]?.url}
+          src={songInfo?.album?.images?.[0]?.url}
           alt=''
         />
         <div>

@@ -8,6 +8,9 @@ module.exports = {
         "spotify-gray": "#121212",
         "spotify-player": "#181818",
       },
+      fontFamily: {
+        spotify: ["Sawarabi Gothic", "sans-serif"],
+      },
     },
   },
   variants: {

@@ -1,4 +1,8 @@
-import { ChevronDownIcon } from "@heroicons/react/outline";
+import {
+  ChevronDownIcon,
+  PlayIcon,
+  RefreshIcon,
+} from "@heroicons/react/outline";
 import { signOut, useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { forEach, shuffle } from "lodash";
@@ -34,6 +38,7 @@ function Center() {
   const featuredListId = useRecoilValue(featuredlistIdState);
   const spotifyApi = useSpotify();
   const [isactive, setIsActive] = useState(false);
+  const [tab, setTab] = useState("home");
   useEffect(() => {
     setColor(shuffle(colors).pop());
   }, [playlistId]);
@@ -66,6 +71,18 @@ function Center() {
     }
   }, [spotifyApi, playlistId]);
 
+  const handleShuffle = () => {
+    spotifyApi.setShuffle(true).then(
+      function () {
+        console.log("Shuffle is on.");
+      },
+      function (err) {
+        //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+        console.log("Something went wrong!", err);
+      }
+    );
+  };
+
   return (
     <div
       className={`flex-grow text-white h-screen overflow-y-scroll scrollbar-hide bg-spotify-gray `}>
@@ -86,30 +103,39 @@ function Center() {
       <section
         className={`flex items-end space-x-7 bg-gradient-to-b bg-spotify-gray ${color} h-80 text-white p-8`}>
         {isactive && playlist ? (
-          <div className='flex items-center space-x-5 relative'>
-            <img
-              className='h-44 w-44 shadow-2xl'
-              src={playlist?.images?.[0]?.url}
-              alt=''
-            />
-            <div>
-              <p className='mb-2'>PLAYLIST</p>
-              <h1 className='text-2xl md:text-3xl xl:text-5xl font-bold'>
-                {playlist?.name}
-              </h1>
+          <div className='flex flex-col space-y-5'>
+            <div className='flex items-center space-x-5 relative'>
+              <img
+                className='h-44 w-44 shadow-2xl'
+                src={playlist?.images?.[0]?.url}
+                alt=''
+              />
+              <div className=''>
+                <p className='mb-2'>PLAYLIST</p>
+                <h1 className='text-2xl md:text-3xl xl:text-5xl font-bold'>
+                  {playlist?.name}
+                </h1>
+              </div>
+            </div>
+
+            <div className=''>
+              <div
+                onClick={handleShuffle}
+                className='w-16 h-16 bg-green-600 p-3 rounded-full cursor-pointer'>
+                <RefreshIcon />
+              </div>
             </div>
           </div>
         ) : (
           <div>
-            <h1 className='text-2xl md:text-3xl xl:text-5xl font-bold pb-16 ml-10'>
-              Recommended Playlists
+            <h1 className='text-2xl md:text-3xl xl:text-5xl font-bold pb-16 ml-10 font-spotify'>
+              Recommended Songs
             </h1>
           </div>
         )}
       </section>
 
       <div>
-        {!playlist ? <RecommendedSongs /> : ""}
         {isactive ? (
           <Songs />
         ) : (
@@ -118,6 +144,7 @@ function Center() {
             <RecommendedSongs />
           </div>
         )}
+        {tab === "home" ? <RecommendedSongs /> : ""}
       </div>
     </div>
   );
